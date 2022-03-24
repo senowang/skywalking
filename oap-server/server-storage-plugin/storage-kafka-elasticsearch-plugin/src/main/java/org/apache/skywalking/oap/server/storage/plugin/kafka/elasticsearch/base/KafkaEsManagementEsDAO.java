@@ -18,37 +18,40 @@
 
 package org.apache.skywalking.oap.server.storage.plugin.kafka.elasticsearch.base;
 
-import org.apache.skywalking.oap.server.core.analysis.config.NoneStream;
-import org.apache.skywalking.oap.server.core.storage.INoneStreamDAO;
+import org.apache.skywalking.oap.server.core.analysis.management.ManagementData;
 import org.apache.skywalking.oap.server.core.storage.StorageHashMapBuilder;
 import org.apache.skywalking.oap.server.core.storage.model.Model;
 import org.apache.skywalking.oap.server.library.client.elasticsearch.ElasticSearchClient;
+import org.apache.skywalking.oap.server.storage.plugin.elasticsearch.base.IndexController;
+import org.apache.skywalking.oap.server.storage.plugin.elasticsearch.base.ManagementEsDAO;
+import org.apache.skywalking.oap.server.storage.plugin.kafka.elasticsearch.util.DataWrapper;
 import org.apache.skywalking.oap.server.storage.plugin.kafka.elasticsearch.util.KafkaSenderHandler;
 
 import java.io.IOException;
 import java.util.Map;
 
-/**
- * Synchronize storage Elasticsearch implements
- */
-public class NoneStreamEsDAO extends EsDAO implements INoneStreamDAO {
-    private final StorageHashMapBuilder<NoneStream> storageBuilder;
+public class KafkaEsManagementEsDAO extends ManagementEsDAO {
+    private final StorageHashMapBuilder<ManagementData> storageBuilder;
 
-    public NoneStreamEsDAO(ElasticSearchClient client,
-                           StorageHashMapBuilder<NoneStream> storageBuilder) {
-        super(client);
+    public KafkaEsManagementEsDAO(ElasticSearchClient client,
+                                  StorageHashMapBuilder<ManagementData> storageBuilder) {
+        super(client, storageBuilder);
         this.storageBuilder = storageBuilder;
     }
 
     @Override
-    public void insert(Model model, NoneStream noneStream) throws IOException {
-        Map<String, Object> builder =
+    public void insert(Model model, ManagementData managementData) throws IOException {
+        String tableName = IndexController.INSTANCE.getTableName(model);
+        String docId = IndexController.INSTANCE.generateDocId(model, managementData.id());
+        final boolean exist = getClient().existDoc(tableName, docId);
+        if (exist) {
+            return;
+        }
+        Map<String, Object> source =
                 IndexController.INSTANCE.appendMetricTableColumn(model, storageBuilder.entity2Storage(
-                        noneStream));
-        String modelName = TimeSeriesUtils.writeIndexName(model, noneStream.getTimeBucket());
-        String id = IndexController.INSTANCE.generateDocId(model, noneStream.id());
+                        managementData));
         //sender to kafka
-        KafkaSenderHandler.getInstance().sender(new DataWrapper(builder, IndexController.INSTANCE.getTableName(model), false, id));
-        getClient().forceInsert(modelName, id, builder);
+        super.insert(model, managementData);
+        KafkaSenderHandler.getInstance().sender(new DataWrapper(source, IndexController.INSTANCE.getTableName(model), false, docId));
     }
 }

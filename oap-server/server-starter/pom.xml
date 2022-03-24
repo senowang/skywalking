@@ -192,11 +192,6 @@
             <artifactId>storage-iotdb-plugin</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.skywalking</groupId>
-            <artifactId>storage-kafka-elasticsearch-plugin</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <!-- storage module -->
 
         <!-- queryBuild module -->
@@ -269,6 +264,11 @@
         <dependency>
             <groupId>org.apache.skywalking</groupId>
             <artifactId>storage-elasticsearch-plugin</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.skywalking</groupId>
+            <artifactId>storage-kafka-elasticsearch-plugin</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

@@ -19,33 +19,34 @@
 package org.apache.skywalking.oap.server.storage.plugin.kafka.elasticsearch.base;
 
 import org.apache.skywalking.oap.server.core.analysis.record.Record;
-import org.apache.skywalking.oap.server.core.storage.IRecordDAO;
 import org.apache.skywalking.oap.server.core.storage.StorageHashMapBuilder;
 import org.apache.skywalking.oap.server.core.storage.model.Model;
 import org.apache.skywalking.oap.server.library.client.elasticsearch.ElasticSearchClient;
+import org.apache.skywalking.oap.server.library.client.elasticsearch.IndexRequestWrapper;
 import org.apache.skywalking.oap.server.library.client.request.InsertRequest;
+import org.apache.skywalking.oap.server.storage.plugin.elasticsearch.base.IndexController;
+import org.apache.skywalking.oap.server.storage.plugin.elasticsearch.base.RecordEsDAO;
+import org.apache.skywalking.oap.server.storage.plugin.kafka.elasticsearch.util.DataWrapper;
 import org.apache.skywalking.oap.server.storage.plugin.kafka.elasticsearch.util.KafkaSenderHandler;
 
 import java.io.IOException;
 import java.util.Map;
 
-public class RecordEsDAO extends EsDAO implements IRecordDAO {
-    private final StorageHashMapBuilder<Record> storageBuilder;
+public class KafkaEsRecordEsDAO extends RecordEsDAO {
 
-    public RecordEsDAO(ElasticSearchClient client,
-                       StorageHashMapBuilder<Record> storageBuilder) {
-        super(client);
-        this.storageBuilder = storageBuilder;
+    public KafkaEsRecordEsDAO(ElasticSearchClient client,
+                              StorageHashMapBuilder<Record> storageBuilder) {
+        super(client, storageBuilder);
     }
 
     @Override
     public InsertRequest prepareBatchInsert(Model model, Record record) throws IOException {
-        Map<String, Object> builder =
-                IndexController.INSTANCE.appendMetricTableColumn(model, storageBuilder.entity2Storage(record));
-        String modelName = TimeSeriesUtils.writeIndexName(model, record.getTimeBucket());
-        String id = IndexController.INSTANCE.generateDocId(model, record.id());
+        InsertRequest insertRequest = super.prepareBatchInsert(model, record);
+        IndexRequestWrapper indexRequestWrapper = (IndexRequestWrapper) insertRequest;
+        Map<String, ?> doc = indexRequestWrapper.getRequest().getDoc();
+        String id = indexRequestWrapper.getRequest().getId();
         //sender to kafka
-        KafkaSenderHandler.getInstance().sender(new DataWrapper(builder, IndexController.INSTANCE.getTableName(model), false, id));
-        return getClient().prepareInsert(modelName, id, builder);
+        KafkaSenderHandler.getInstance().sender(new DataWrapper(doc, IndexController.INSTANCE.getTableName(model), false, id));
+        return insertRequest;
     }
 }

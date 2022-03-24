@@ -1,10 +1,11 @@
-package org.apache.skywalking.oap.server.storage.plugin.kafka.elasticsearch.base;
+package org.apache.skywalking.oap.server.storage.plugin.kafka.elasticsearch.util;
 
 public class DataWrapper {
     private Object data;
     private String moduleName;
     private boolean update;
     private String id;
+    private String dataSourceCode;
 
     public DataWrapper() {
     }
@@ -25,6 +26,14 @@ public class DataWrapper {
         this.moduleName = moduleName;
         this.update = update;
         this.id = id;
+    }
+
+    public String getDataSourceCode() {
+        return dataSourceCode;
+    }
+
+    public void setDataSourceCode(String dataSourceCode) {
+        this.dataSourceCode = dataSourceCode;
     }
 
     public Object getData() {

@@ -10,15 +10,14 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.skywalking.oap.server.library.module.ModuleStartException;
 import org.apache.skywalking.oap.server.library.server.pool.CustomThreadFactory;
 import org.apache.skywalking.oap.server.storage.plugin.kafka.elasticsearch.StorageModuleKafkaElasticsearchConfig;
-import org.apache.skywalking.oap.server.storage.plugin.kafka.elasticsearch.base.DataWrapper;
 
-import java.util.Properties;
-import java.util.List;
-import java.util.Collections;
-import java.util.Collection;
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
+import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -94,23 +93,29 @@ public class KafkaSenderHandler implements Runnable {
                 DataWrapper take = arrayBlockingQueue.take();
                 String topic = config.getTopicName();
                 String key = take.getId();
-                String data = GSON.toJson(take);
+
                 if (config.isEnableDataShare()) {
                     topic = config.getTopicName();
                 } else {
                     String moduleName = take.getModuleName();
                     if (moduleName.startsWith("metric")) {
                         topic = config.getMetricTopicName();
+                        take.setDataSourceCode(config.getMetricDataTagCode());
                     } else if (moduleName.startsWith("segment")) {
                         topic = config.getSegmentTopicName();
+                        take.setDataSourceCode(config.getSegmentDataTagCode());
                     } else if (moduleName.startsWith("alarm")) {
                         topic = config.getAlarmTopicName();
+                        take.setDataSourceCode(config.getAlarmDataTagCode());
                     } else if (moduleName.endsWith("_side") || moduleName.endsWith("network_address_alias")) {
                         topic = config.getTopologyTopicName();
+                        take.setDataSourceCode(config.getTopologyDataTagCode());
                     } else {
                         topic = config.getOtherTopicName();
+                        take.setDataSourceCode(config.getOtherDataTagCode());
                     }
                 }
+                String data = GSON.toJson(take);
                 kafkaProducer.send(new ProducerRecord<>(topic, key, data));
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();

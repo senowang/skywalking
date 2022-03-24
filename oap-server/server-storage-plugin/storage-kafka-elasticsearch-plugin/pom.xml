@@ -21,7 +21,7 @@
     <parent>
         <artifactId>server-storage-plugin</artifactId>
         <groupId>org.apache.skywalking</groupId>
-        <version>8.8.2-SNAPSHOT</version>
+        <version>8.9.2-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -31,9 +31,15 @@
     <dependencies>
         <dependency>
             <groupId>org.apache.skywalking</groupId>
+            <artifactId>storage-elasticsearch-plugin</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.skywalking</groupId>
             <artifactId>server-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.apache.skywalking</groupId>
             <artifactId>library-client</artifactId>
