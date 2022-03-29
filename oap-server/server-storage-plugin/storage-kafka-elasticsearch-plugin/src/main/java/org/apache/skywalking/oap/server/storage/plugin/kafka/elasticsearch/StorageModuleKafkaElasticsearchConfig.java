@@ -31,28 +31,23 @@ public class StorageModuleKafkaElasticsearchConfig extends StorageModuleElastics
      * Kafka producer config.
      */
     private Properties kafkaProducerConfig = new Properties();
-
     /**
      * <B>bootstrap.servers</B>: A list of host/port pairs to use for establishing the initial connection to the Kafka cluster.
      * A list of host/port pairs to use for establishing the initial connection to the Kafka cluster.
      */
     private String bootstrapServers;
-
     /**
      * If true, create the Kafka topic when it does not exist.
      */
     private boolean createTopicIfNotExist = true;
-
     /**
      * The number of partitions for the topic being created.
      */
     private int partitions = 3;
-
     /**
      * The replication factor for each partition in the topic being created.
      */
     private int replicationFactor = 2;
-
     private String topicName = "skywalking-data";
     /**
      * metric
@@ -74,21 +69,13 @@ public class StorageModuleKafkaElasticsearchConfig extends StorageModuleElastics
      * other
      */
     private String otherTopicName = "skywalking-data-other";
-
     private String segmentDataTagCode = "skywalking_trace";
-
     private String alarmDataTagCode = "skywalking_alarm";
-
     private String metricDataTagCode = "skywalking_metric";
-
     private String topologyDataTagCode = "skywalking_topology";
-
     private String otherDataTagCode = "skywalking_other";
-
     private int dataCacheSize;
-
     private boolean enableKafka = true;
-
     private boolean enableEs = true;
     /**
      * enable all data to sender one topic

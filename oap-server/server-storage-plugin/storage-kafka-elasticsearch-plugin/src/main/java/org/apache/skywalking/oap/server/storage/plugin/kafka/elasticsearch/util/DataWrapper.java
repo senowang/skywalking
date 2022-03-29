@@ -7,8 +7,10 @@ public class DataWrapper {
     private boolean update;
     private String id;
     private String dataSourceCode;
+
     public DataWrapper() {
     }
+
     public DataWrapper(Object data, String moduleName, boolean update, String id, int scopeId) {
         this.data = data;
         this.moduleName = moduleName;
