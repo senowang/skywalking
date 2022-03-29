@@ -52,6 +52,6 @@ public class KafkaEsManagementEsDAO extends ManagementEsDAO {
                         managementData));
         //sender to kafka
         super.insert(model, managementData);
-        KafkaSenderHandler.getInstance().sender(new DataWrapper(source, IndexController.INSTANCE.getTableName(model), false, docId));
+        KafkaSenderHandler.getInstance().sender(new DataWrapper(source, IndexController.INSTANCE.getTableName(model), false, docId, model.getScopeId()));
     }
 }

@@ -46,7 +46,7 @@ public class KafkaEsRecordEsDAO extends RecordEsDAO {
         Map<String, ?> doc = indexRequestWrapper.getRequest().getDoc();
         String id = indexRequestWrapper.getRequest().getId();
         //sender to kafka
-        KafkaSenderHandler.getInstance().sender(new DataWrapper(doc, IndexController.INSTANCE.getTableName(model), false, id));
+        KafkaSenderHandler.getInstance().sender(new DataWrapper(doc, IndexController.INSTANCE.getTableName(model), false, id, model.getScopeId()));
         return insertRequest;
     }
 }

@@ -49,7 +49,7 @@ public class KafkaEsMetricsEsDAO extends MetricsEsDAO {
         Map<String, ?> doc = indexRequestWrapper.getRequest().getDoc();
         String id = indexRequestWrapper.getRequest().getId();
         //sender to kafka
-        KafkaSenderHandler.getInstance().sender(new DataWrapper(doc, IndexController.INSTANCE.getTableName(model), false, id));
+        KafkaSenderHandler.getInstance().sender(new DataWrapper(doc, IndexController.INSTANCE.getTableName(model), false, id, model.getScopeId()));
         return insertRequest;
     }
 
@@ -60,7 +60,7 @@ public class KafkaEsMetricsEsDAO extends MetricsEsDAO {
         Map<String, ?> doc = updateRequestWrapper.getRequest().getDoc();
         String id = updateRequestWrapper.getRequest().getId();
         //sender to kafka
-        KafkaSenderHandler.getInstance().sender(new DataWrapper(doc, IndexController.INSTANCE.getTableName(model), true, id));
+        KafkaSenderHandler.getInstance().sender(new DataWrapper(doc, IndexController.INSTANCE.getTableName(model), true, id, model.getScopeId()));
         return updateRequest;
     }
 }

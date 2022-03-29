@@ -49,7 +49,7 @@ public class KafkaEsNoneStreamEsDAO extends NoneStreamEsDAO {
                         noneStream));
         String id = IndexController.INSTANCE.generateDocId(model, noneStream.id());
         //sender to kafka
-        KafkaSenderHandler.getInstance().sender(new DataWrapper(builder, IndexController.INSTANCE.getTableName(model), false, id));
+        KafkaSenderHandler.getInstance().sender(new DataWrapper(builder, IndexController.INSTANCE.getTableName(model), false, id, model.getScopeId()));
         super.insert(model, noneStream);
     }
 }
