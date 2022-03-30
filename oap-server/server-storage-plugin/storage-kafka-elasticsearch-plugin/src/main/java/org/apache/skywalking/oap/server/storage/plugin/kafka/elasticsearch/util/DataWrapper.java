@@ -2,7 +2,7 @@ package org.apache.skywalking.oap.server.storage.plugin.kafka.elasticsearch.util
 
 public class DataWrapper {
     private Object data;
-    private int scopeId;
+    private String scope;
     private String moduleName;
     private boolean update;
     private String id;
@@ -11,20 +11,20 @@ public class DataWrapper {
     public DataWrapper() {
     }
 
-    public DataWrapper(Object data, String moduleName, boolean update, String id, int scopeId) {
+    public DataWrapper(Object data, String moduleName, boolean update, String id, String scope) {
         this.data = data;
         this.moduleName = moduleName;
         this.update = update;
         this.id = id;
-        this.scopeId = scopeId;
+        this.scope = scope;
     }
 
-    public int getScopeId() {
-        return scopeId;
+    public String getScope() {
+        return scope;
     }
 
-    public void setScopeId(int scopeId) {
-        this.scopeId = scopeId;
+    public void setScope(String scope) {
+        this.scope = scope;
     }
 
     public String getDataSourceCode() {

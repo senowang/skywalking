@@ -19,6 +19,7 @@
 package org.apache.skywalking.oap.server.storage.plugin.kafka.elasticsearch.base;
 
 import org.apache.skywalking.oap.server.core.analysis.config.NoneStream;
+import org.apache.skywalking.oap.server.core.source.DefaultScopeDefine;
 import org.apache.skywalking.oap.server.core.storage.StorageHashMapBuilder;
 import org.apache.skywalking.oap.server.core.storage.model.Model;
 import org.apache.skywalking.oap.server.library.client.elasticsearch.ElasticSearchClient;
@@ -49,7 +50,7 @@ public class KafkaEsNoneStreamEsDAO extends NoneStreamEsDAO {
                         noneStream));
         String id = IndexController.INSTANCE.generateDocId(model, noneStream.id());
         //sender to kafka
-        KafkaSenderHandler.getInstance().sender(new DataWrapper(builder, IndexController.INSTANCE.getTableName(model), false, id, model.getScopeId()));
+        KafkaSenderHandler.getInstance().sender(new DataWrapper(builder, IndexController.INSTANCE.getTableName(model), false, id, DefaultScopeDefine.catalogOf(model.getScopeId())));
         super.insert(model, noneStream);
     }
 }

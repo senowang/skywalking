@@ -20,6 +20,7 @@ package org.apache.skywalking.oap.server.storage.plugin.kafka.elasticsearch.base
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.skywalking.oap.server.core.analysis.metrics.Metrics;
+import org.apache.skywalking.oap.server.core.source.DefaultScopeDefine;
 import org.apache.skywalking.oap.server.core.storage.StorageHashMapBuilder;
 import org.apache.skywalking.oap.server.core.storage.model.Model;
 import org.apache.skywalking.oap.server.library.client.elasticsearch.ElasticSearchClient;
@@ -49,7 +50,7 @@ public class KafkaEsMetricsEsDAO extends MetricsEsDAO {
         Map<String, ?> doc = indexRequestWrapper.getRequest().getDoc();
         String id = indexRequestWrapper.getRequest().getId();
         //sender to kafka
-        KafkaSenderHandler.getInstance().sender(new DataWrapper(doc, IndexController.INSTANCE.getTableName(model), false, id, model.getScopeId()));
+        KafkaSenderHandler.getInstance().sender(new DataWrapper(doc, IndexController.INSTANCE.getTableName(model), false, id, DefaultScopeDefine.catalogOf(model.getScopeId())));
         return insertRequest;
     }
 
@@ -60,7 +61,7 @@ public class KafkaEsMetricsEsDAO extends MetricsEsDAO {
         Map<String, ?> doc = updateRequestWrapper.getRequest().getDoc();
         String id = updateRequestWrapper.getRequest().getId();
         //sender to kafka
-        KafkaSenderHandler.getInstance().sender(new DataWrapper(doc, IndexController.INSTANCE.getTableName(model), true, id, model.getScopeId()));
+        KafkaSenderHandler.getInstance().sender(new DataWrapper(doc, IndexController.INSTANCE.getTableName(model), true, id, DefaultScopeDefine.catalogOf(model.getScopeId())));
         return updateRequest;
     }
 }

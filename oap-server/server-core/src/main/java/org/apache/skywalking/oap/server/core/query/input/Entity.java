@@ -39,7 +39,7 @@ public class Entity {
      * 2. scope=Service, ServiceInstance and Endpoint, set neccessary serviceName/serviceInstanceName/endpointName
      * 3. Scope=ServiceRelation, ServiceInstanceRelation and EndpointRelation
      *    serviceName/serviceInstanceName/endpointName is/are the source(s)
-     *    estServiceName/destServiceInstanceName/destEndpointName is/are destination(s)
+     *    destServiceName/destServiceInstanceName/destEndpointName is/are destination(s)
      *    set necessary names of sources and destinations.
      * </pre>
      */

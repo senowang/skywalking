@@ -19,6 +19,7 @@
 package org.apache.skywalking.oap.server.storage.plugin.kafka.elasticsearch.base;
 
 import org.apache.skywalking.oap.server.core.analysis.record.Record;
+import org.apache.skywalking.oap.server.core.source.DefaultScopeDefine;
 import org.apache.skywalking.oap.server.core.storage.StorageHashMapBuilder;
 import org.apache.skywalking.oap.server.core.storage.model.Model;
 import org.apache.skywalking.oap.server.library.client.elasticsearch.ElasticSearchClient;
@@ -46,7 +47,7 @@ public class KafkaEsRecordEsDAO extends RecordEsDAO {
         Map<String, ?> doc = indexRequestWrapper.getRequest().getDoc();
         String id = indexRequestWrapper.getRequest().getId();
         //sender to kafka
-        KafkaSenderHandler.getInstance().sender(new DataWrapper(doc, IndexController.INSTANCE.getTableName(model), false, id, model.getScopeId()));
+        KafkaSenderHandler.getInstance().sender(new DataWrapper(doc, IndexController.INSTANCE.getTableName(model), false, id, DefaultScopeDefine.catalogOf(model.getScopeId())));
         return insertRequest;
     }
 }

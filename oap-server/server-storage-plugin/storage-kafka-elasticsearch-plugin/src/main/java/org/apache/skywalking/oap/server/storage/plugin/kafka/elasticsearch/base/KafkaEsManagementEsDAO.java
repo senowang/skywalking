@@ -19,6 +19,7 @@
 package org.apache.skywalking.oap.server.storage.plugin.kafka.elasticsearch.base;
 
 import org.apache.skywalking.oap.server.core.analysis.management.ManagementData;
+import org.apache.skywalking.oap.server.core.source.DefaultScopeDefine;
 import org.apache.skywalking.oap.server.core.storage.StorageHashMapBuilder;
 import org.apache.skywalking.oap.server.core.storage.model.Model;
 import org.apache.skywalking.oap.server.library.client.elasticsearch.ElasticSearchClient;
@@ -52,6 +53,6 @@ public class KafkaEsManagementEsDAO extends ManagementEsDAO {
                         managementData));
         //sender to kafka
         super.insert(model, managementData);
-        KafkaSenderHandler.getInstance().sender(new DataWrapper(source, IndexController.INSTANCE.getTableName(model), false, docId, model.getScopeId()));
+        KafkaSenderHandler.getInstance().sender(new DataWrapper(source, IndexController.INSTANCE.getTableName(model), false, docId, DefaultScopeDefine.catalogOf(model.getScopeId())));
     }
 }
