@@ -148,7 +148,7 @@ public final class ElasticSearchBuilder {
                          .idleTimeout(socketTimeout)
                          .useHttp2Preface(false)
                          .workerGroup(numHttpClientThread > 0 ? numHttpClientThread : NUM_PROC);
-
+        // if has ca path ,set trustManager
         if (StringUtil.isNotBlank(trustStorePath)) {
             final TrustManagerFactory trustManagerFactory =
                 TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
@@ -160,6 +160,9 @@ public final class ElasticSearchBuilder {
 
             factoryBuilder.tlsCustomizer(
                 sslContextBuilder -> sslContextBuilder.trustManager(trustManagerFactory));
+        }else if (protocol.equals(SessionProtocol.HTTPS)){
+            // if protocol is https ,but not ca path is set ,tlsNoVerify
+            factoryBuilder.tlsNoVerify();
         }
 
         final ClientFactory clientFactory = factoryBuilder.build();
