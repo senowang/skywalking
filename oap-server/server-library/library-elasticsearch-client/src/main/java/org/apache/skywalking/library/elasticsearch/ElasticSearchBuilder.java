@@ -160,7 +160,7 @@ public final class ElasticSearchBuilder {
 
             factoryBuilder.tlsCustomizer(
                 sslContextBuilder -> sslContextBuilder.trustManager(trustManagerFactory));
-        }else if (protocol.equals(SessionProtocol.HTTPS)){
+        } else if (protocol.equals(SessionProtocol.HTTPS)) {
             // if protocol is https ,but not ca path is set ,tlsNoVerify
             factoryBuilder.tlsNoVerify();
         }
